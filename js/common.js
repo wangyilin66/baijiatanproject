@@ -29,16 +29,46 @@ var base = {
     },
     // baseurl: "http://39.98.37.28:8085/", //公共的url,url前不加http://默认认为相对路径，会截取当前地址的头部
     // baseurl: 'http://39.100.50.205:8085/', //公共的url,url前不加http://默认认为相对路径，会截取当前地址的头部
-    baseurl: 'http://39.98.186.243/', //公共的url,url前不加http://默认认为相对路径，会截取当前地址的头部
+    baseurl: 'http://114.67.235.93:3001', //公共的url,url前不加http://默认认为相对路径，会截取当前地址的头部
     commonAjax: function (thisurl, thisdata, funcName) {
         //引用ajax的方法
         $.ajax({
             url: this.baseurl + thisurl, //获取数据的url
             dateType: "json", //参数返回的类型
-            type: "POST", //参数传送的方式
+            //type: "POST", //参数传送的方式
+            type: "GET", //参数传送的方式
             data: thisdata,
 
             traditional: true,
+            async: true,
+            success: function (data) {
+                //请求成功后的回调函数
+                if (typeof data == "string") {
+                    data = $.parseJSON(data);
+                }
+                if (typeof eval(funcName) == "function") {
+                    eval(funcName)(data);
+                    return true;
+                }
+                layui.use('element', function() {
+                    var element = layui.element;
+                    element.init();
+                });
+            }
+        });
+    },
+
+    commonAjax_p: function (thisurl, thisdata, funcName) {
+        //引用ajax的方法
+        $.ajax({
+            url: this.baseurl + thisurl, //获取数据的url
+            dateType: "json", //参数返回的类型
+            type: "POST", //参数传送的方式
+            //type: "GET", //参数传送的方式
+            data: thisdata,
+            traditional: true,
+            // processData:false,
+            // contentType:false,
             async: true,
             success: function (data) {
                 //请求成功后的回调函数
